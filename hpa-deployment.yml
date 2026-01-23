@@ -1,1 +1,55 @@
-
+apiversion: appl/v1
+kind: Devployment 
+mentadata:
+  name: my-deployment
+  labels:
+    app: my-app
+spec:
+  replicas: 1  # number of pod replicas
+  selector:
+    matchLabels:
+      app: my-app
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1 #number of pods that can be created above the desired number of pods in short newly updated new app version pods created at a time
+      maxUnavailable: 1 #number of pods that can be unavailable during the update process in short old app version pods terminated at a time
+  template:
+    metadata:
+      name: nginx-pod
+      labels:
+        app: my-app
+    spec:
+      containers:
+        - name: nginx-container
+          image: httpd:latest  #v1
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: "1000m"
+              memory: "512Mi"  # vertical autoscaling minimum resources
+            limits:
+              cpu: "2000m"
+              memory: "1024Mi"  # vertical autoscaling maximum resources
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: my-hpa
+  labels:
+    app: my-app
+spec: 
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: my-deployment
+  minReplicas: 1
+  macReplicas: 2
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 10  # target average CPU utilization percentage for scaling  

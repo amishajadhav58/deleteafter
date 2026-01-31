@@ -1,0 +1,10 @@
+apiVersion: v1
+metadate:
+      name: mginx-pod
+kind: Pod 
+spec: 
+      containers:
+       - name : nignx-container
+         image: nignx-latest
+         ports:
+            - containerPort: 80       

@@ -42,7 +42,7 @@ metadata:
 spec: 
   scaleTargetRef:
     apiVersion: apps/v1
-    kind: Deployment
+    kind: Deploymentg
     name: my-deployment
   minReplicas: 1
   macReplicas: 2

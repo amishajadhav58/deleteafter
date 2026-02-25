@@ -1,0 +1,15 @@
+apiVersion: v1
+metadata: 
+    name: ci-nginxappservice
+kind: Service
+spec: 
+    selector:
+        app: podci
+    type: ClusterIP
+    ports:
+      - protocol: TCP 
+        port: 80 
+        targetPort: 80
+        
+
+ #kubectl expose pod cipod  --port=80 --target-port=80 --type=ClusterIP
